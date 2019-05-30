@@ -4,6 +4,8 @@ import {FormComp, InputComp, ButtonComp} from '../../../components/components';
 import { signup } from '../actions/user.actions';
 import Uploader from '../../../components/upload.component';
 import { getBase64 } from '../../../utils/file.utils';
+import '../style/style.css';
+
 
 const FormItem = FormComp.Item;
 

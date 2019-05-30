@@ -12,7 +12,8 @@
     "react-scripts": "2.1.8",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
-    "redux-saga": "^1.0.2"
+    "redux-saga": "^1.0.2",
+    "simple-react-video-thumbnail": "0.0.5"
   },
   "scripts": {
     "start": "react-scripts start",

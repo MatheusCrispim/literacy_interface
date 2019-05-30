@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'; 
 import {FormComp, InputComp, ButtonComp} from '../../../components/components';
 import { login } from '../actions/user.actions';
-
+import '../style/style.css';
 
 const FormItem = FormComp.Item;
 
@@ -22,7 +22,7 @@ class LoginContainer extends React.Component{
 
         return(<FormComp style={{width:300}}>
                     <FormItem>
-                        {getFieldDecorator('email', {
+                        {getFieldDecorator('username', {
                             rules: [{ required: true, message: 'Por favor, insira o email!' }],
                         })(
                             <InputComp />

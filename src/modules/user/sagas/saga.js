@@ -1,26 +1,28 @@
 import { takeLatest, all, call, put } from 'redux-saga/effects';
 import { Service } from '../../../services/service';
 import { UserTypes } from '../actions/types';
-import { loginSuccess, loginfail, signupSuccess, signupFail } from '../actions/user.actions';
-const { LOGIN, SIGNUP } = UserTypes;
+import { loginSuccess, loginfail, signupSuccess, signupFail, getUserSuccess } from '../actions/user.actions';
+const { LOGIN, SIGNUP, GET_USER } = UserTypes;
 
-const { get, post, update, del } = new Service();
+const { get, post } = new Service();
 const endpoint = '/users';
 
 export function* rootUserSaga(){
     yield all([
         takeLatest(LOGIN, loginUserSaga),
-        takeLatest(SIGNUP, signupUserSaga)
+        takeLatest(SIGNUP, signupUserSaga),
+        takeLatest(GET_USER, getUserSaga)
     ]);
 }
 
 function* loginUserSaga(action){       
     try{
-        let response = yield call(post, endpoint, action.payload);
-        
+        let response = yield call(post, endpoint+"/login", action.payload);
+    
         if(response.status === 200){
-            let { token } = response;
-            yield put(loginSuccess(token));
+            const { token } = response.data;   
+            let payload = { token };
+            yield put(loginSuccess(payload));
         }else{
             yield put(loginfail("Credenciais do inválidas"));
         }
@@ -31,15 +33,29 @@ function* loginUserSaga(action){
 
 function* signupUserSaga(action){
     try{
-        console.log(action.payload)
         let response = yield call(post, endpoint, action.payload);
         
         if(response.status === 201){
             yield put(signupSuccess());
         }else{
             let { createAccount } =  response;
-
+            yield put(signupSuccess(createAccount));
         }
-
+        
     }catch(error){/*Do error handling after*/}
+}
+
+
+function* getUserSaga(action){
+    try{
+        let response = yield call(get, endpoint+'/profile');
+        if(response.status === 200 ){
+            const { data } = response;
+            let payload = {userData: data};
+            yield put(getUserSuccess(payload));
+        }else{
+    
+        } 
+    }catch(error){/*Do error handling after*/}
+
 }

@@ -1,13 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { registerChallenge } from '../actions/actions';
-import { FormComp, ButtonComp, InputComp } from '../../../components/components';
+import { FormComp, ButtonComp, InputComp, SelectComp } from '../../../components/components';
 import Uploader from '../../../components/upload.component';
 import { getBase64 } from '../../../utils/file.utils';
 
 const FormItem = FormComp.Item;
+const { Option } = SelectComp;
 
-class ChallengeRegisterContainer extends  React.Component{
+
+class ChallengeRegisterContainer extends  React.Component{ 
+
+    contexts = this.props.contexts.map((context)=>{
+            return <Option key={context.name}>{context.name}</Option>;
+    });
+    
 
     setField = (file)=>{
         getBase64(file, (base64)=>{
@@ -19,6 +26,8 @@ class ChallengeRegisterContainer extends  React.Component{
         e.preventDefault();
         this.props.form.validateFields((error, payload) => {
             if (!error) {
+                let context = this.props.contexts.find(item => item.name = payload.context);
+                payload.context = context.id;
                 this.props.dispatch(registerChallenge(payload));
             }
         });
@@ -53,7 +62,12 @@ class ChallengeRegisterContainer extends  React.Component{
                     {getFieldDecorator('context', {  
                         rules: [{ required: true, message: 'Por favor, insira o contexto!' }],
                     })(
-                        <InputComp placeholder="ID do Contexto" />
+                        <SelectComp 
+                            showSearch 
+                            placeholder="Selecione um contexto"
+                            tokenSeparators={[',']}>
+                            {this.contexts}
+                        </SelectComp>
                     )}
                 </FormItem>
                 <FormItem>
@@ -79,7 +93,8 @@ class ChallengeRegisterContainer extends  React.Component{
 }
 
 const mapStateToProps = (state) => ({
-    loading: state.challenge.loading
+    loading: state.challenge.loading,
+    contexts: state.context.data
 });
 
 export default connect(mapStateToProps)(FormComp.create()(ChallengeRegisterContainer));

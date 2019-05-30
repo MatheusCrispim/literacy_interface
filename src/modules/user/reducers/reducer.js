@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { UserTypes } from '../actions/types';
-import { setToken } from '../../../utils/user.utils';
 import { redirect } from '../../../utils/url.utils';
+import { setToken } from '../../../utils/user.utils';
 
 //Types
 const { 
@@ -10,46 +10,54 @@ const {
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGIN, 
-    SIGNUP } = UserTypes;
+    SIGNUP, 
+    GET_USER,
+    GET_USER_SUCCESS } = UserTypes;
 
 export default handleActions(
     new Map([
       [
         LOGIN,
-        (state, action) => ({loginFeedback: state.loginFeedback, loading: true})
+        (state, action) => ({loginFeedback: state.loginFeedback, loading: true, userData:{} })
       ], 
       [
         SIGNUP,
-        (state, action) => ({signupFeedback: state.loginFeedback, loading: true})
+        (state, action) => ({signupFeedback: state.loginFeedback, loading: true, userData:{} })
+      ],
+      [
+        GET_USER,
+        (state, action) => ({loginFeedback: state.loginFeedback, loading: true, userData:{} })
       ],
       [
         SIGNUP_SUCCESS,
         (state, action) => {
-            setToken(action.payload);
-            redirect('/dashboard');
-            return {signupFeedback: '', loading: false}
+            return {signupFeedback: '', loading: false, userData:{} }
         }
       ],
       [
         SIGNUP_FAIL,
         (state, action) => {
-            return {signupFeedback: action.payload, loading: false}
+            return {signupFeedback: action.payload, loading: false, userData:{} }
         }
       ], 
       [
         LOGIN_SUCCESS,
         (state, action) => {
-          let { token } = action.payload;
+          const { token } = action.payload;
           setToken(token);
-          redirect('/');
-          return {loginFeedback: '', loading: false}
+          redirect('/dashboard');
+          return {loginFeedback: '', loading: false, userData:{} }
         }
       ], 
       [
         LOGIN_FAIL,
-        (state, action) => ({loginFeedback: action.payload, loading: false})
-      ], 
-    ]),
+        (state, action) => ({loginFeedback: action.payload, loading: false, userData:{}})
+      ],
+      [
+        GET_USER_SUCCESS,
+        (state, action) => ({loginFeedback: '', loading: false, userData:action.payload.userData})
+      ]
 
-    { loginFeedback: '', signupFeedback: '',  loading: false }
-  );
+    ]),
+    { loginFeedback: '', signupFeedback: '',  loading: false, userData:{}}
+);

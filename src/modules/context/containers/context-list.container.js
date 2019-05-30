@@ -4,6 +4,7 @@ import TableComp from '../../../components/table.component';
 import { deleteContext, updateContext } from '../actions/actions';
 import ContextDetaisContainer from './context-details.container';
 import Search from  '../../../components/search.component';
+import { AvatarComp, VideoThumbComp } from '../../../components/components';
 
 class ContextLisContainer extends React.Component{
 
@@ -27,7 +28,10 @@ class ContextLisContainer extends React.Component{
             key: 'image',
             inputType: 'image',
             editable: true,
-            required: true
+            required: true,
+            render: image => (
+                <AvatarComp size={64} shape="square" src={image} />
+            )
         },
         {
             title: 'Áudio',
@@ -40,6 +44,12 @@ class ContextLisContainer extends React.Component{
             dataIndex: 'video',
             key: 'video',
             editable: true,
+            render: video => (
+                <VideoThumbComp 
+                    videoUrl={video}
+                    width={10}
+                    height={10} />
+            )
         }
     ]
 

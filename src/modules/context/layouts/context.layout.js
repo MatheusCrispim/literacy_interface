@@ -1,7 +1,5 @@
 import React from 'react';
-import ContextTable from '../containers/context-list.container';
-import ContextRegister from '../containers/context-register.container';
-
+import ContextContainer from '../containers/context.container';
 
 class ContextLayout extends  React.Component{
 
@@ -9,8 +7,7 @@ class ContextLayout extends  React.Component{
 
         return(
             <div>
-                <ContextRegister />
-                <ContextTable />
+                <ContextContainer />
             </div>
         );
     }

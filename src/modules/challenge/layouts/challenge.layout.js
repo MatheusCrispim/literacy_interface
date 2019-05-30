@@ -1,6 +1,5 @@
 import React from 'react';
-import ChallengeRegister from '../containers/challenge-register.container';
-import ChallengeTable from '../containers/challenge-list.container';
+import ChallengeContainer from '../containers/challenge.container';
 
 class ContextLayout extends  React.Component{
 
@@ -8,8 +7,7 @@ class ContextLayout extends  React.Component{
 
         return(
             <div>
-                <ChallengeRegister />
-                <ChallengeTable />
+                <ChallengeContainer />
             </div>
         );
     }

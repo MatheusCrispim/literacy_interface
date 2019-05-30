@@ -6,27 +6,38 @@ const routes =
         path: '/',
         auth: true,
         exact: true
-    },
+    },    
     {
-        name: 'challenge',
-        component: 'pages/challenge.page',
-        path: '/challenge',
+        name: 'dashboard',
+        component: 'pages/dashboard.page',
+        path: '/dashboard',
         auth: true,
-        exact: true
+        children: [
+            {
+                name: 'context',
+                component: 'pages/context.page',
+                path: '/dashboard/context',
+                auth: true,
+            },
+            {
+                name: 'challenge',
+                component: 'pages/challenge.page',
+                path: '/dashboard/challenge',
+                auth: true,
+            }
+        ]
     },
     {
         name: 'signup',
         component: 'pages/signup.page',
         path: '/signup',
         auth: true,
-        exact: true
     },
     {
         name: 'login',
         component: 'pages/login.page',
         path: '/login',
         auth: true,
-        exact: true
     },
 
 ]
