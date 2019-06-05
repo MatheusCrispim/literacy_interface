@@ -1,6 +1,36 @@
-/*Context Container*/
 
-.container .drawer-button{
+/*Context Container*/
+.contextDetails{
+    text-align: center;
+}
+
+.contextDetails .info{
+    margin-top: 20px;
+}
+
+.contextDetails .audio{
+    outline: none;
+    border: none;
+}
+
+.context .search{
+    width: 50%;
+}
+
+.context #search{
+    border: none;
+}
+
+.context .title{
+    font-family: "Times New Roman, Times, serif";
+}
+
+.context .drawer-button{
     float: right;
-    margin: 10px;
+}
+
+.context .table{
+    margin-left: 5%;
+    margin-top: 20px;
+    width: 90%;
 }

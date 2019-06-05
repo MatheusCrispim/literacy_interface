@@ -1,13 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { registerContext } from '../actions/actions';
-import { FormComp, ButtonComp, InputComp, IconComp } from '../../../components/components';
+import { FormComp, ButtonComp, InputComp, NotificationComp } from '../../../components/components';
 import Uploader from '../../../components/upload.component';
 import { getBase64 } from '../../../utils/file.utils';
+import { ContextTypes } from '../actions/types';
 
+const { REGISTER_CONTEXT } = ContextTypes;
 const FormItem = FormComp.Item;
 
 class ContextRegisterContainer extends  React.Component{
+
+    notify = (type, title, description)=>{
+        NotificationComp[type]({
+            message: title,
+            description: description
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(this.props.action === REGISTER_CONTEXT){
+            if(prevProps.requested !== this.props.requested){
+                if(this.props.requested){
+                    if(this.props.success){
+                        this.notify('success', 'Contexto cadastrado', 'Seu contexto foi cadastrado com sucesso!')
+                        this.props.form.resetFields();
+                    }else{
+                        this.notify('error', 'Erro ao cadastrar', 'Provavelmente um contexto com esse nome já existe!')
+                    }
+                }            
+            }
+        }
+    }
 
     setField = (file)=>{
         getBase64(file, (base64)=>{
@@ -63,7 +87,7 @@ class ContextRegisterContainer extends  React.Component{
                     )}
                 </FormItem>
                 <FormItem>
-                    <ButtonComp loading={this.props.loading} onClick={this.register}>Cadastrar Contexto</ButtonComp>
+                    <ButtonComp type="primary" loading={this.props.loading} onClick={this.register}>Cadastrar Contexto</ButtonComp>
                 </FormItem>
             </FormComp>
         );
@@ -71,6 +95,9 @@ class ContextRegisterContainer extends  React.Component{
 }
 
 const mapStateToProps = (state) => ({
+    requested: state.context.requested,
+    success: state.context.success,
+    action: state.context.action,
     loading: state.context.loading
 });
 

@@ -1,14 +1,14 @@
 import { takeLatest, all, call, put, select } from 'redux-saga/effects';
 import { Service } from '../../../services/service';
 import { ContextTypes } from '../actions/types';
-import { success, fail } from '../actions/actions';
+import { contextSuccess, contextFail } from '../actions/actions';
 
 const { get, post, update, del } = new Service();
 const endpoint = '/contexts';
 
 const { GET_CONTEXT, 
         REGISTER_CONTEXT,
-        UPATE_CONTEXT,
+        UPDATE_CONTEXT,
         DELETE_CONTEXT
     } = ContextTypes;
 
@@ -17,7 +17,7 @@ export function* rootContextSaga(){
     yield all([
         takeLatest(GET_CONTEXT, getContextSaga),
         takeLatest(REGISTER_CONTEXT, registerContextSaga),
-        takeLatest(UPATE_CONTEXT, updateContextSaga),
+        takeLatest(UPDATE_CONTEXT, updateContextSaga),
         takeLatest(DELETE_CONTEXT, deleteContextSaga)
     ]);
 }
@@ -26,18 +26,17 @@ export function* rootContextSaga(){
 function* getContextSaga(action){
 
     try{
-        let response = call(get, endpoint);
+        let response = yield call(get, endpoint);
 
         if(response.status === 200){
-            let payload = {};
-            put(success(payload));
+            let payload = {data: response.data};
+            yield put(contextSuccess(payload));
         }else{
             let payload = {};
-            put(fail(payload));
+            yield put(contextFail(payload));
         }
 
     }catch(error){}
-
 }
 
 
@@ -49,13 +48,13 @@ function* registerContextSaga(action){
         if(response.status === 201){
             data.unshift(response.data);
             let payload = {data};
-            yield put(success(payload));
+            yield put(contextSuccess(payload));
         }else{
             let payload = {data};
-            yield put(fail(payload));
+            yield put(contextFail(payload));
         }
 
-    }catch(error){console.log(error)}
+    }catch(error){}
 }
 
 
@@ -69,10 +68,10 @@ function* updateContextSaga(action){
             data.splice(index, 1, response.data);
 
             let payload = {data};
-            yield put(success(payload));
+            yield put(contextSuccess(payload));
         }else{
             let payload = {data};
-            yield put(fail(payload));
+            yield put(contextFail(payload));
         }
 
     }catch(error){}
@@ -81,19 +80,21 @@ function* updateContextSaga(action){
 
 function* deleteContextSaga(action){
     try{
-        let data = yield select(state => state.context.data)    
-        let response =yield call(del, `${endpoint}/${action.payload}`);
+        let data = yield select(state => state.context.data)
+        
+        let response = yield call(del, `${endpoint}/${action.payload}`);
 
         if(response.status === 200){
             let index = data.findIndex(item=> action.payload === item.id);
             data.splice(index, 1);
 
             let payload = {data};
-            yield put(success(payload));
+            yield put(contextSuccess(payload));
         }else{
             let payload = {data};
-            yield put(fail(payload));
+            yield put(contextFail(payload));
         }
 
     }catch(error){}
+
 }

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { UserTypes } from '../actions/types';
 import { redirect } from '../../../utils/url.utils';
-import { setToken } from '../../../utils/user.utils';
+import { setToken, unsetToken } from '../../../utils/user.utils';
 
 //Types
 const { 
@@ -10,6 +10,7 @@ const {
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGIN, 
+    LOGOUT,
     SIGNUP, 
     GET_USER,
     GET_USER_SUCCESS } = UserTypes;
@@ -20,6 +21,14 @@ export default handleActions(
         LOGIN,
         (state, action) => ({loginFeedback: state.loginFeedback, loading: true, userData:{} })
       ], 
+      [
+        LOGOUT,
+        (state, action) => {
+            unsetToken();
+            redirect('/login');
+            return {loginFeedback: '', loading: false, userData:{} }
+        }
+      ],
       [
         SIGNUP,
         (state, action) => ({signupFeedback: state.loginFeedback, loading: true, userData:{} })

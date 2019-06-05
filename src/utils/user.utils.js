@@ -1,12 +1,16 @@
 import { Service } from "../services/service";
+const { get } = new Service();
 
 export async function isAuthenticated(){
-    
-    let response = Service.get('/users/profile');
-    if(response.status === 401){
-        return false;
+    let response = await get('/users/profile');
+    if(response.status === 200){
+        return true;
     }
-    return true;
+    return false;
+}
+
+export function unsetToken(){
+    window.localStorage.removeItem('token');
 }
 
 

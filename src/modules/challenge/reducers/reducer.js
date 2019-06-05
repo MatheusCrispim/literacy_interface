@@ -4,37 +4,37 @@ import {  ChallengeTypes  } from '../actions/types';
 const { 
     GET_CHALLENGE, 
     REGISTER_CHALLENGE,
-    UPATE_CHALLENGE,
+    UPDATE_CHALLENGE,
     DELETE_CHALLENGE,
-    SUCCESS,
-    FAIL } = ChallengeTypes;
+    CHALLENGE_SUCCESS,
+    CHALLENGE_FAIL } = ChallengeTypes;
 
 export default handleActions(
     new Map([
         [
             GET_CHALLENGE,
-            (state, action)=>({})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:GET_CHALLENGE})
         ],
         [
             REGISTER_CHALLENGE,
-            (state, action)=>({loading: true, data:[...state.data]})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:REGISTER_CHALLENGE})
         ],
         [
-            UPATE_CHALLENGE,
-            (state, action)=>({loading: true, data:[...state.data]})
+            UPDATE_CHALLENGE,
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:UPDATE_CHALLENGE})
         ],        
         [
             DELETE_CHALLENGE,
-            (state, action)=>({loading: true, data:[...state.data]})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:DELETE_CHALLENGE})
         ],
         [
-            SUCCESS,
-            (state, action)=>({loading: false, data:[...action.payload.data]})
+            CHALLENGE_SUCCESS,
+            (state, action)=>({loading: false, data:[...action.payload.data], requested:true, success:true, action:state.action})
         ],
         [
-            FAIL,
-            (state, action)=>({loading: false, data:[...action.payload.data]})
+            CHALLENGE_FAIL,
+            (state, action)=>({loading: false, data:[...action.payload.data], requested:true, success:false, action:state.action})
         ]
     ]),
-    {loading: false, data:[]}
+    {loading: false, data:[], action:''}
 );

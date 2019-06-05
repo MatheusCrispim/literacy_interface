@@ -4,11 +4,27 @@ import TableComp from '../../../components/table.component';
 import { deleteContext, updateContext } from '../actions/actions';
 import ContextDetaisContainer from './context-details.container';
 import Search from  '../../../components/search.component';
-import { AvatarComp, VideoThumbComp } from '../../../components/components';
+import { AvatarComp, VideoThumbComp, IconComp, TagComp, NotificationComp } from '../../../components/components';
+import { ContextTypes } from '../actions/types';
+
+const { UPDATE_CONTEXT, DELETE_CONTEXT } = ContextTypes;
 
 class ContextLisContainer extends React.Component{
 
+    componentWillMount(){
+        this.setState({data:[...this.props.data]});
+    }
+    
+    notify = (type, title, description)=>{
+        NotificationComp[type]({
+            message: title,
+            description: description
+        });
+    }
+
+
     state = {
+        lastSearch:"",
         details: false,
         context:{},
         data:[]
@@ -16,21 +32,29 @@ class ContextLisContainer extends React.Component{
 
     columns = [
         {
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id',
+            editable: false,
+            sorter: (a, b) => a.id - b.id,
+        },
+        {
             title: 'Nome',
             dataIndex: 'name',
             key: 'name',
             editable: true,
-            required: true
+            required: true,
+            sorter: (a, b) => a.name.length - b.name.length,
         },
         {
             title: 'Imagem',
             dataIndex: 'image',
             key: 'image',
-            inputType: 'image',
+            inputType: {type:'image'},
             editable: true,
             required: true,
             render: image => (
-                <AvatarComp size={64} shape="square" src={image} />
+                <AvatarComp size={80} shape="square" src={image} />
             )
         },
         {
@@ -38,6 +62,14 @@ class ContextLisContainer extends React.Component{
             dataIndex: 'sound',
             key: 'sound',
             editable: true,
+            render: audio => (
+                audio !== "" & audio !== null & audio !== undefined?
+                   <TagComp color="cyan">
+                        <IconComp style={{fontSize:'10pt'}} type="sound" />
+                    </TagComp>
+                :
+                <TagComp color="#f50">Sem áudio</TagComp>
+            )
         },
         {
             title: 'Vídeo',
@@ -45,38 +77,65 @@ class ContextLisContainer extends React.Component{
             key: 'video',
             editable: true,
             render: video => (
-                <VideoThumbComp 
-                    videoUrl={video}
-                    width={10}
-                    height={10} />
+                video !== "" & video !== null & video !== undefined?
+                    <VideoThumbComp 
+                        width="100px"
+                        height="auto"
+                        url={video} />
+                :
+                <TagComp color="#f50">Sem vídeo</TagComp>
             )
+            
         }
     ]
 
-
     componentDidUpdate(prevProps, prevState){
         if(prevProps.data !== this.props.data){
-            this.setState({data:[...this.props.data]})
+            this.setState({data:[...this.props.data]});
+            if(this.state.lastSearch !== ""){
+                this.search(this.state.lastSearch);
+            }
+        }
+
+        if(prevProps.requested !== this.props.requested){
+            if(this.props.requested){
+                if(this.props.action === UPDATE_CONTEXT){
+                    if(this.props.success){
+                        this.notify('success', 'Contexto atualizado', 'Seu contexto foi atualizado com sucesso!')
+                    }else{
+                        this.notify('error', 'Erro ao atualizar', 'Provavelmente um contexto com esse nome já existe!')
+                    }           
+                }
+
+                if(this.props.action === DELETE_CONTEXT){
+                    if(this.props.success){
+                        this.notify('success', 'Contexto removido', 'Seu contexto foi removido com sucesso!')
+                    }else{
+                        this.notify('error', 'Erro ao remover', 'Esse contexto não pode ser removido pois existem desafios atrelados a ele!')
+                    }           
+                }
+            }
         }
     }
 
     clear = ()=>{
-        this.setState({data:[...this.props.data]})
+        this.setState({data:[...this.props.data]});
+        this.setState({lastSearch:""});
     }
+
 
     search = (value)=>{
         let result=[];
         for(let i=0; i<this.props.data.length; i++){
-            if(this.props.data[i].name.toLowerCase() === value.toLowerCase()){
+            if(this.props.data[i].name.toLowerCase().indexOf(value.toLowerCase())!==-1){
                 result.push(this.props.data[i]);
             }
         }
-        this.setState({data:result})
+        this.setState({data:result, lastSearch: value});
     }
 
-
     closeDetails = ()=>{
-        this.setState({details:false})
+        this.setState({details:false});
     }
 
     details = (payload) => {
@@ -95,8 +154,9 @@ class ContextLisContainer extends React.Component{
         
         return( 
             <div>
-                <Search onSearch ={this.search} onClear={this.clear} />
+                <Search extraProp={{'className':'search', 'placeholder':'Pesquise por contextos'}} onSearch ={this.search} onClear={this.clear} />
                 <TableComp 
+                    extraProp={{'className':'table'}}
                     data={this.state.data}
                     details={this.details}
                     update={this.update}
@@ -114,6 +174,9 @@ class ContextLisContainer extends React.Component{
 }
 
 const mapStateToProps = (state) => ({
+    requested: state.context.requested,
+    success: state.context.success,
+    action: state.context.action,
     data: state.context.data,
     loading: state.context.loading
 });

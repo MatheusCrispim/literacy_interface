@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UploadComp, IconCompComp, IconComp, ModalComp, MessageComp } from './components';
+import { UploadComp, IconComp, ModalComp, MessageComp } from './components';
 import { findInArray } from '../utils/array.utils';
 
 class Uploader extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TableComp, IconComp, FormComp, InputComp, TagComp, PopconfirmComp } from './components';
+import { TableComp, IconComp, FormComp, InputComp, TagComp, PopconfirmComp, SelectComp } from './components';
 import Uploader from './upload.component';
 import { getBase64, getBase64FromUrl } from '../utils/file.utils';
 
@@ -20,15 +20,16 @@ class EditableCell extends React.Component {
 
     setField = (file, form)=>{
         getBase64(file, (base64)=>{
-            form.setFieldsValue({['image']: base64})
+            form.setFieldsValue({'image': base64})
         })
     }
 
-    getInput = (type, form, value) => {
-        switch(type){
-
+    getInput = (input, form, value) => {
+        let inputType = input !== undefined? input.type : "";
+    
+        switch(inputType){
             case "image": 
-
+            
                 let fileList = [{
                     uid: '-1',
                     name: value,
@@ -39,14 +40,22 @@ class EditableCell extends React.Component {
                 return <Uploader 
                             fileList={fileList}
                             callback={()=> getBase64FromUrl(value, (base64)=>{
-                                form.setFieldsValue({['image']: base64})
+                                form.setFieldsValue({'image': base64})
                             })}
                             numberOfFiles={1}
                             uploadertype="picture-card"
                             fileTypeAllowed={['image/jpeg', 'image/png']}
                             errorMessage="O arquivo deve ser uma imagem"
                             data={(data)=>this.setField(data, form)} />
-                         
+
+            case "options":
+                return <SelectComp 
+                            style={{minWidth:'100%'}}
+                            showSearch={true}
+                            tokenSeparators={[',']}>
+                            {input.data}
+                        </SelectComp>
+
             default:
                 return <InputComp />;
         }
@@ -74,11 +83,11 @@ class EditableCell extends React.Component {
                                 <FormItem style={{ margin: 0 }}>
                                     {getFieldDecorator(dataIndex, {
                                         rules: [{
-
                                             required: required,
                                             message: ` Por favor, insira o campo ${title}`,
                                         }],
-                                        initialValue: record[dataIndex], 
+                                         
+                                        initialValue: inputType !== undefined? []: record[dataIndex]
                                     })(this.getInput(inputType, form, record[dataIndex]))}
                                 </FormItem>
                             ) : restProps.children}
@@ -93,7 +102,6 @@ class EditableCell extends React.Component {
 
 class TableComponent extends React.Component {
     columns;
-
     constructor(props){
         
         super(props);
@@ -209,6 +217,7 @@ class TableComponent extends React.Component {
         return (
             <div>
                 <TableComp
+                    {...this.props.extraProp}
                     onChange={this.props.onChangePage}
                     rowKey="id"
                     loading={this.props.loading}
@@ -216,7 +225,7 @@ class TableComponent extends React.Component {
                     pagination={true}
                     columns={columns} 
                     components={components}
-                    size="middle"
+                    size="large"
                     locale={{emptyText:'Nada encontrado'}}
                 />
             </div>
@@ -231,7 +240,8 @@ TableComponent.propTypes = {
     details : PropTypes.func.isRequired,
     update : PropTypes.func.isRequired,
     delete : PropTypes.func.isRequired,
-    onChangePage : PropTypes.func
+    onChangePage : PropTypes.func,
+    extraProp: PropTypes.object
 }
 
 export default TableComponent;

@@ -14,11 +14,14 @@ function Search(props){
 
 
     let onSearch = (value)=>{
-        props.onSearch(value);
+        if(value !== ""){
+            props.onSearch(value);
+        }
     }
 
 
     return  <InputComp.Search 
+                {...props.extraProp}
                 id="search"
                 onChange={change}
                 allowClear
@@ -27,7 +30,8 @@ function Search(props){
 
 Search.propTypes = {
     onSearch: PropTypes.func.isRequired,
-    onClear: PropTypes.func.isRequired
+    onClear: PropTypes.func.isRequired,
+    extraProp: PropTypes.object
 }
 
 export default Search;

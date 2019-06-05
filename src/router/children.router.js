@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { route } from "../utils/router.utils";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 import { dynamicImport } from '../utils/router.utils';
 
@@ -15,7 +15,6 @@ class ChildrenRouter extends Component{
     });
     
     render(){
-        console.log(this.childrenRoutes)
         return(
             <Switch>
                 {this.routes}

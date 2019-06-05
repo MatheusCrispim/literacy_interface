@@ -1,8 +1,9 @@
 import { Input, Form, Avatar, Card, Menu, Icon, Row, Col, Tag, 
     Tooltip, Divider, Button, Timeline, PageHeader, Collapse, Table, 
     Popconfirm, Upload, Modal, message, Layout, Drawer, Affix, Select,
-    LocaleProvider } from 'antd';
-import VideoThumb from 'simple-react-video-thumbnail';
+    LocaleProvider, notification
+    } from 'antd';
+import VideoThumb from 'react-player';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import 'antd/dist/antd.css';
 
@@ -34,3 +35,4 @@ export const LayoutComp = Layout;
 export const DrawerComp = Drawer;
 export const AffixComp = Affix;
 export const VideoThumbComp = VideoThumb;
+export const NotificationComp = notification;

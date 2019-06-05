@@ -1,7 +1,7 @@
 import { takeLatest, all, call, put } from 'redux-saga/effects';
 import { Service } from '../../../services/service';
 import { UserTypes } from '../actions/types';
-import { loginSuccess, loginfail, signupSuccess, signupFail, getUserSuccess } from '../actions/user.actions';
+import { loginSuccess, loginfail, signupSuccess, signupFail, getUserSuccess, login } from '../actions/user.actions';
 const { LOGIN, SIGNUP, GET_USER } = UserTypes;
 
 const { get, post } = new Service();
@@ -37,9 +37,10 @@ function* signupUserSaga(action){
         
         if(response.status === 201){
             yield put(signupSuccess());
+            yield put(login(action.payload));
         }else{
-            let { createAccount } =  response;
-            yield put(signupSuccess(createAccount));
+    
+            yield put(signupFail("Usuário já existente"));
         }
         
     }catch(error){/*Do error handling after*/}

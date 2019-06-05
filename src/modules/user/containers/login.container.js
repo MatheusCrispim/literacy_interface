@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'; 
 import {FormComp, InputComp, ButtonComp} from '../../../components/components';
 import { login } from '../actions/user.actions';
+import { route } from '../../../utils/router.utils';
 import '../style/style.css';
 
 const FormItem = FormComp.Item;
@@ -20,28 +21,40 @@ class LoginContainer extends React.Component{
     render(){
         const { getFieldDecorator } = this.props.form;
 
-        return(<FormComp style={{width:300}}>
+        return(
+        
+                <FormComp className="form loginForm">
+                    <FormItem>
+                        <span className="description">Sisalfa</span>
+                    </FormItem>
                     <FormItem>
                         {getFieldDecorator('username', {
-                            rules: [{ required: true, message: 'Por favor, insira o email!' }],
+                            rules: [{ required: true, message: <div className="error">Por favor, insira o email!</div> }],
                         })(
-                            <InputComp />
+                            <InputComp placeholder="Username" />
                         )}
                     </FormItem>
                     <FormItem>
                         {getFieldDecorator('password', {
-                            rules: [{ required: true, message:  'Por favor, insira a senha!' }],
+                            rules: [{ required: true, message:  <div className="error">Por favor, insira a senha!</div> }],
                         })(
-                            <InputComp.Password />
+                            <InputComp.Password  placeholder="Senha"/>
                         )}
                     </FormItem>
                     <FormItem>
-                        <ButtonComp type="primary" onClick={this.handleLogin} loading={this.props.loading}>
+                        <ButtonComp className="loginBtn" type="primary" onClick={this.handleLogin} loading={this.props.loading}>
                             Login
                         </ButtonComp>
                     </FormItem>
-                    <div>{this.props.loginFeedback}</div>
-                </FormComp>)
+                    <FormItem>
+                        <ul className="list">
+                            <li className="li">Não tem conta? Crie uma <a href={route('signup').path}>aqui</a></li>
+                        </ul>
+                        <div className="loginFail">{this.props.loginFeedback}</div>
+                    </FormItem>
+                </FormComp>
+            
+            )
     }
 }
 

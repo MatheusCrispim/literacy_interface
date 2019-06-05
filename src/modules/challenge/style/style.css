@@ -1,6 +1,36 @@
-/*Context Container*/
+/*challenge Container*/
+.challengeDetails{
+    text-align: center;
+}
 
-.container .drawer-button{
+.challengeDetails .info{
+    margin-top: 20px;
+}
+
+.challengeDetails .audio{
+    outline: none;
+    border: none;
+}
+
+
+.challenge .search{
+    width: 50%;
+}
+
+.challenge #search{
+    border: none;
+}
+
+.challenge .title{
+    font-family: "Times New Roman, Times, serif";
+}
+
+.challenge .drawer-button{
     float: right;
-    margin: 10px;
+}
+
+.challenge .table{
+    margin-left: 5%;
+    margin-top: 20px;
+    width: 90%;
 }

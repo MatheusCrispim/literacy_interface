@@ -1,20 +1,46 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { registerChallenge } from '../actions/actions';
-import { FormComp, ButtonComp, InputComp, SelectComp } from '../../../components/components';
+import { FormComp, ButtonComp, InputComp, SelectComp, NotificationComp } from '../../../components/components';
 import Uploader from '../../../components/upload.component';
 import { getBase64 } from '../../../utils/file.utils';
+import { ChallengeTypes } from '../actions/types';
+
+const { REGISTER_CHALLENGE } = ChallengeTypes;
 
 const FormItem = FormComp.Item;
 const { Option } = SelectComp;
 
-
 class ChallengeRegisterContainer extends  React.Component{ 
 
     contexts = this.props.contexts.map((context)=>{
-            return <Option key={context.name}>{context.name}</Option>;
+        return <Option key={context.name}>{context.name}</Option>;
     });
+
+
+    notify = (type, title, description)=>{
+        NotificationComp[type]({
+            message: title,
+            description: description
+        });
+    }
     
+    componentDidUpdate(prevProps, prevState){
+
+        if(this.props.action === REGISTER_CHALLENGE){
+            if(prevProps.requested !== this.props.requested){
+                if(this.props.requested){
+                    if(this.props.success){
+                        this.notify('success', 'Desafio cadastrado', 'Seu desafio foi cadastrado!')
+                        this.props.form.resetFields();
+                    }else{
+                        this.notify('error', 'Erro ao cadastrar', 'Erro ao cadastrar desafio!')
+                    }
+                }            
+            }
+        }
+
+    }
 
     setField = (file)=>{
         getBase64(file, (base64)=>{
@@ -26,7 +52,7 @@ class ChallengeRegisterContainer extends  React.Component{
         e.preventDefault();
         this.props.form.validateFields((error, payload) => {
             if (!error) {
-                let context = this.props.contexts.find(item => item.name = payload.context);
+                let context = this.props.contexts.find(item => item.name === payload.context);
                 payload.context = context.id;
                 this.props.dispatch(registerChallenge(payload));
             }
@@ -34,7 +60,6 @@ class ChallengeRegisterContainer extends  React.Component{
     }
 
     render(){
-
         const { getFieldDecorator } = this.props.form;
         
         return(
@@ -63,7 +88,7 @@ class ChallengeRegisterContainer extends  React.Component{
                         rules: [{ required: true, message: 'Por favor, insira o contexto!' }],
                     })(
                         <SelectComp 
-                            showSearch 
+                            showSearch={true}
                             placeholder="Selecione um contexto"
                             tokenSeparators={[',']}>
                             {this.contexts}
@@ -85,7 +110,7 @@ class ChallengeRegisterContainer extends  React.Component{
                     )}
                 </FormItem>
                 <FormItem>
-                    <ButtonComp loading={this.props.loading} onClick={this.register}>Cadastrar Desafio</ButtonComp>
+                    <ButtonComp type="primary" loading={this.props.loading} onClick={this.register}>Cadastrar Desafio</ButtonComp>
                 </FormItem>
             </FormComp>
         );
@@ -93,8 +118,11 @@ class ChallengeRegisterContainer extends  React.Component{
 }
 
 const mapStateToProps = (state) => ({
+    action: state.challenge.action,
     loading: state.challenge.loading,
-    contexts: state.context.data
+    requested: state.challenge.requested,
+    success: state.challenge.success,
+    contexts: state.context.data,
 });
 
 export default connect(mapStateToProps)(FormComp.create()(ChallengeRegisterContainer));

@@ -4,12 +4,15 @@ import {FormComp, InputComp, ButtonComp} from '../../../components/components';
 import { signup } from '../actions/user.actions';
 import Uploader from '../../../components/upload.component';
 import { getBase64 } from '../../../utils/file.utils';
+import { route } from '../../../utils/router.utils';
 import '../style/style.css';
-
 
 const FormItem = FormComp.Item;
 
 class SignupContainer extends React.Component{
+
+    componentDidUpdate(){
+    }
 
     setField = (file)=>{
         getBase64(file, (base64)=>{
@@ -30,10 +33,14 @@ class SignupContainer extends React.Component{
 
         const { getFieldDecorator } = this.props.form;
 
-        return(<FormComp hideRequiredMark>
+        return(<FormComp className="form signup" hideRequiredMark>
+
                     <FormItem>
+                        <span className="description">Sisalfa</span>
+                    </FormItem>
+                    <FormItem className="form upload">
                         {getFieldDecorator('photo', {  
-                            rules: [{ required: false, message: 'Por favor, insira a imagem!' }],
+                            rules: [{ required: false, message:  <div className="error">Por favor, insira a imagem!</div> }],
                         })(
                             <Uploader 
                                 numberOfFiles={1}
@@ -43,53 +50,60 @@ class SignupContainer extends React.Component{
                                 data={this.setField} />
                         )}
                     </FormItem>
-                    <FormItem label="Nome">
+                    <FormItem>
                         {getFieldDecorator('firstName', {
-                            rules: [{ required: true, message: 'Por favor, insira o nome!' }],
+                            rules: [{ required: true, message: <div className="error">Por favor, insira o nome!</div> }],
                         })(
-                            <InputComp />
-                        )}
-                    </FormItem>
-                    <FormItem label="Sobrenome">
-                        {getFieldDecorator('lastName', {
-                            rules: [{ required: true, message: 'Por favor, insira o nome!' }],
-                        })(
-                            <InputComp />
-                        )}
-                    </FormItem>
-                    <FormItem label="Username">
-                        {getFieldDecorator('username', {
-                            rules: [{ required: true, message: 'Por favor, insira o username!' }],
-                        })(
-                            <InputComp />
-                        )}
-                    </FormItem>
-                    <FormItem label="Email">
-                        {getFieldDecorator('email', {
-                            rules: [{ required: true, message: 'Por favor, insira o email!' }],
-                        })(
-                            <InputComp />
-                        )}
-                    </FormItem>
-                    <FormItem label="Senha">
-                        {getFieldDecorator('password', {
-                            rules: [{ required: true, message:  'Por favor, insira a senha!' }],
-                        })(
-                            <InputComp.Password />
+                            <InputComp placeholder="Nome"/>
                         )}
                     </FormItem>
                     <FormItem>
-                        <ButtonComp type="primary" onClick={this.handleSignup}>
-                            Login
+                        {getFieldDecorator('lastName', {
+                            rules: [{ required: true, message: <div className="error">Por favor, insira o sobrenome!</div> }],
+                        })(
+                            <InputComp placeholder="Sobrenome" />
+                        )}
+                    </FormItem>
+                    <FormItem >
+                        {getFieldDecorator('username', {
+                            rules: [{ required: true, message: <div className="error">Por favor, insira o username!</div> }],
+                        })(
+                            <InputComp placeholder="Username"/>
+                        )}
+                    </FormItem>
+                    <FormItem >
+                        {getFieldDecorator('email', {
+                            rules: [{ required: true, message: <div className="error">Por favor, insira o email!</div> }],
+                        })(
+                            <InputComp placeholder="Email"/>
+                        )}
+                    </FormItem>
+                    <FormItem >
+                        {getFieldDecorator('password', {
+                            rules: [{ required: true, message:  <div className="error">Por favor, insira a senha!</div> }],
+                        })(
+                            <InputComp.Password  placeholder="Senha"/>
+                        )}
+                    </FormItem>
+                    <FormItem >
+                        <ButtonComp loading={this.props.loading} className="form btnSignup" type="primary" onClick={this.handleSignup}>
+                            Cadastrar-se
                         </ButtonComp>
                     </FormItem>
-                    <div>{this.props.signupFeedback}</div>
+
+                    <FormItem>
+                        <ul className="list">
+                            <li className="li">Já tem uma conta? Conecte-se <a href={route('login').path}>aqui</a></li>
+                        </ul>
+                        <div className="signupFail">{this.props.signupFeedback}</div>
+                    </FormItem>
                 </FormComp>)
     }
 }
 
 const mapStateToProps = (state) => ({
-    signupFeedback: state.user.signupFeedback
+    signupFeedback: state.user.signupFeedback,
+    loading: state.user.loading
 });
 
 export default connect(mapStateToProps)(FormComp.create()(SignupContainer));

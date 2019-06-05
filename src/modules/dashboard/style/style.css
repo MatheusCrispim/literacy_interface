@@ -1,0 +1,29 @@
+.dashboard{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dashboard .logo{
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 28px 16px 0;
+    float: left;
+}
+.dashboard .body{
+    min-height: 100vh;
+}
+
+.dashboard .header .menu{
+    line-height: 64px;
+    float: right;
+}
+
+.content{
+    padding: 50px;
+    /*style={{ padding: '50px 50px', height: '500px' }}*/
+}
+
+.body .sider{
+    margin-top: -4.1px;
+    padding: 0px;
+}

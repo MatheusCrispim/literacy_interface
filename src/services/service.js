@@ -1,6 +1,6 @@
 import { getToken } from "../utils/user.utils";
 
-const BASE_PATH = 'http://localhost:9000/api';
+const BASE_PATH = 'https://app.sisalfa.dcx.ufpb.br/v1/api'//'http://localhost:9000/api';
 
 export  class Service{
 
@@ -8,7 +8,7 @@ export  class Service{
         this.header = new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'x-access-token': getToken()
+            'x-access-token': getToken(),
         });
 
         this.data = {};
@@ -69,13 +69,14 @@ export  class Service{
 
     //Delete request
     del = async (endpoint) => {
+    
         let apiPath = BASE_PATH+endpoint;
 
         let rawResponse = await fetch(apiPath, {
             method: 'DELETE',
             headers: this.header,
         });
-        
+
         let statusCode = await rawResponse.status;
 
         return {'status':statusCode};

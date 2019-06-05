@@ -3,37 +3,38 @@ import {  ContextTypes  } from '../actions/types';
 
 const { GET_CONTEXT, 
     REGISTER_CONTEXT,
-    UPATE_CONTEXT,
+    UPDATE_CONTEXT,
     DELETE_CONTEXT,
-    SUCCESS,
-    FAIL } = ContextTypes;
+    CONTEXT_SUCCESS,
+    CONTEXT_FAIL } = ContextTypes;
 
 export default handleActions(
     new Map([
         [
             GET_CONTEXT,
-            (state, action)=>({})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:GET_CONTEXT})
         ],
         [
             REGISTER_CONTEXT,
-            (state, action)=>({loading: true, data:[...state.data]})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:REGISTER_CONTEXT})
         ],
         [
-            UPATE_CONTEXT,
-            (state, action)=>({loading: true, data:[...state.data]})
+            UPDATE_CONTEXT,
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:UPDATE_CONTEXT})
         ],        
         [
             DELETE_CONTEXT,
-            (state, action)=>({loading: true, data:[...state.data]})
+            (state, action)=>({loading: true, data:[...state.data], requested:false, success:false, action:DELETE_CONTEXT})
         ],
         [
-            SUCCESS,
-            (state, action)=>({loading: false, data:[...action.payload.data]})
+            CONTEXT_SUCCESS,
+            (state, action)=>({loading: false, data:[...action.payload.data], requested:true, success:true, action:state.action})
         ],
         [
-            FAIL,
-            (state, action)=>({loading: false, data:[...action.payload.data]})
+            CONTEXT_FAIL,
+            (state, action)=>({loading: false, data:[...action.payload.data], requested:true, success:false, action:state.action})
         ]
     ]),
-    {loading: false, data:[]}
+    {loading: false, data:[], requested:false, success:false, action:''}
+
 );

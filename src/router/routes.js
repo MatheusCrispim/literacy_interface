@@ -2,9 +2,9 @@ const routes =
 [
     {
         name: 'root',
-        component: 'pages/context.page',
+        component: 'pages/login.page',
         path: '/',
-        auth: true,
+        auth: false,
         exact: true
     },    
     {
@@ -13,6 +13,13 @@ const routes =
         path: '/dashboard',
         auth: true,
         children: [
+            {
+                name: 'challenge',
+                component: 'pages/context.page',
+                path: '/dashboard',
+                auth: true,
+                exact:true,
+            },
             {
                 name: 'context',
                 component: 'pages/context.page',
@@ -31,13 +38,13 @@ const routes =
         name: 'signup',
         component: 'pages/signup.page',
         path: '/signup',
-        auth: true,
+        auth: false,
     },
     {
         name: 'login',
         component: 'pages/login.page',
         path: '/login',
-        auth: true,
+        auth: false,
     },
 
 ]

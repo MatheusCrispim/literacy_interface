@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import DashboarContainer from '../containers/dashboard.container';
+import DashboardContainer from '../containers/dashboard.container';
 
 class DashboardLayout extends Component{
     render(){
         return(
             <div>
-                <DashboarContainer />
+                <DashboardContainer />
             </div>
         );
     }
