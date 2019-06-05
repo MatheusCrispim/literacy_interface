@@ -10,10 +10,9 @@ class ChildrenRouter extends Component{
     childrenRoutes = route(this.props.parent).children;
 
     routes = this.childrenRoutes.map((route)=>{
-        if(!route.default){
-            let component = dynamicImport(route.component);
-            return <Route exact={ route.exact } key={ route.name } path={ route.path }  component={ component } />
-        }
+        let component = dynamicImport(route.component);
+        return <Route exact={ route.exact } key={ route.name } path={ route.path }  component={ component } />
+
       });
     
     render(){
