@@ -7,8 +7,9 @@ import { isAuthenticated } from '../utils/user.utils';
 
 class MainRouter extends Component{
 
-    constructor(props){
-        super(props);
+
+
+    componentWillMount(){
         isAuthenticated().then(response=>{
             let currentPath = `/${window.location.pathname.split('/')[1]}`;
             let currentRoute = routeByPath(currentPath);
@@ -28,8 +29,7 @@ class MainRouter extends Component{
                     }
                 }
             }
-            
-        })   
+        });
     }
 
     routes = routes.map((route)=>{
@@ -39,11 +39,13 @@ class MainRouter extends Component{
     
     render(){
         return(
-            <Router>
-                <Switch>
-                    {this.routes}
-                </Switch>
-            </Router>
+            <React.Suspense fallback={<div>Carregando</div>}>
+                <Router>
+                    <Switch>
+                        {this.routes}
+                    </Switch>
+                </Router>
+            </React.Suspense>
         );
     }
 }

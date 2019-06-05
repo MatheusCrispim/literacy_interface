@@ -9,8 +9,11 @@
 }
 
 .contextDetails .audio{
-    outline: none;
     border: none;
+}
+
+.contextDetails .audio:focus{
+    outline: none;
 }
 
 .context .search{
