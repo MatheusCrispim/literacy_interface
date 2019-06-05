@@ -14,11 +14,11 @@ const routes =
         auth: true,
         children: [
             {
-                name: 'challenge',
+                name: 'homeDash',
                 component: 'pages/context.page',
                 path: '/dashboard',
+                exact: true,
                 auth: true,
-                exact:true,
             },
             {
                 name: 'context',
