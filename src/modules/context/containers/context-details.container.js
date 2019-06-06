@@ -17,7 +17,7 @@ class ContextDetaisContainer extends React.Component{
                     </div>
                     <div className="info video">
                         {  
-                            video !== "" & video !== undefined?
+                            video !== "" & video !== undefined & video !== null?
                                 video.indexOf('yout') !== -1?
                                     <iframe width="430" src={ video } title={ name } frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                 :
@@ -32,7 +32,7 @@ class ContextDetaisContainer extends React.Component{
                     </div>
                     <div className="info audio">
                         {
-                            sound !== "" & sound !== undefined?
+                            sound !== "" & sound !== undefined & video !== null?
                             <audio controls>
                                 <source src={sound} type="audio/ogg" />
                                 <source src={sound} type="audio/mpeg" />
